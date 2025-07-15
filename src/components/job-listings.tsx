@@ -61,7 +61,7 @@ export function JobListings({ jobs }: JobListingsProps) {
           </CardContent>
           <CardFooter>
             <Button asChild className="w-full bg-accent text-accent-foreground hover:bg-accent/90">
-              <a href="#" target="_blank" rel="noopener noreferrer">
+              <a href={`https://www.linkedin.com/jobs/search/?keywords=${encodeURIComponent(job.jobTitle + ' ' + job.companyName)}`} target="_blank" rel="noopener noreferrer">
                 View Job <ExternalLink className="ml-2 h-4 w-4" />
               </a>
             </Button>
