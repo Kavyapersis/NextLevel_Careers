@@ -1,7 +1,7 @@
-import { CareerCompassClient } from '@/components/career-compass-client';
+import { NextLevelCareersClient } from '@/components/next-level-careers-client';
 
 export default function Home() {
   return (
-    <CareerCompassClient />
+    <NextLevelCareersClient />
   );
 }

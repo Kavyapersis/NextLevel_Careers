@@ -1,5 +1,5 @@
 /**
- * @fileOverview Shared Zod schemas and TypeScript types for the CareerCompass AI flows.
+ * @fileOverview Shared Zod schemas and TypeScript types for the NextLevel Careers AI flows.
  * This file does not use 'use server' and can be safely imported into any environment.
  */
 import { z } from 'genkit';

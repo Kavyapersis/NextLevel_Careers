@@ -14,7 +14,7 @@ import { Input } from '@/components/ui/input';
 
 type Status = 'idle' | 'analyzing' | 'error' | 'done';
 
-export function CareerCompassClient() {
+export function NextLevelCareersClient() {
   const [status, setStatus] = useState<Status>('idle');
   const [appAnalysis, setAppAnalysis] = useState<AppAnalysis | null>(null);
   const [desiredJob, setDesiredJob] = useState('');
@@ -75,7 +75,7 @@ export function CareerCompassClient() {
         <div className="container mx-auto flex h-16 items-center justify-between px-4 md:px-6">
           <div className="flex items-center gap-2">
             <Compass className="h-8 w-8 text-primary" />
-            <h1 className="font-headline text-2xl font-bold text-foreground">CareerCompass</h1>
+            <h1 className="font-headline text-2xl font-bold text-foreground">NextLevel Careers</h1>
           </div>
         </div>
       </header>
@@ -151,7 +151,7 @@ export function CareerCompassClient() {
       </main>
       <footer className="border-t bg-background">
         <div className="container mx-auto px-4 py-6 text-center text-muted-foreground md:px-6">
-          <p>&copy; {new Date().getFullYear()} CareerCompass. All rights reserved.</p>
+          <p>&copy; {new Date().getFullYear()} NextLevel Careers. All rights reserved.</p>
         </div>
       </footer>
     </div>

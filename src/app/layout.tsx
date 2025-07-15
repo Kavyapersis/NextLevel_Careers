@@ -3,7 +3,7 @@ import './globals.css';
 import { Toaster } from "@/components/ui/toaster"
 
 export const metadata: Metadata = {
-  title: 'CareerCompass',
+  title: 'NextLevel Careers',
   description: 'AI Resume Analyzer & Job Matcher',
 };
 
