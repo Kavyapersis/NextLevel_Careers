@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import type { AppAnalysis } from '@/lib/types';
 import { processResumeAndFindJobs } from '@/app/actions';
 import { useToast } from '@/hooks/use-toast';
@@ -18,7 +18,12 @@ export function NextLevelCareersClient() {
   const [status, setStatus] = useState<Status>('idle');
   const [appAnalysis, setAppAnalysis] = useState<AppAnalysis | null>(null);
   const [desiredJob, setDesiredJob] = useState('');
+  const [currentYear, setCurrentYear] = useState<number | null>(null);
   const { toast } = useToast();
+
+  useEffect(() => {
+    setCurrentYear(new Date().getFullYear());
+  }, []);
 
   const handleFileUpload = async (file: File) => {
     if (!desiredJob) {
@@ -151,7 +156,7 @@ export function NextLevelCareersClient() {
       </main>
       <footer className="border-t bg-background">
         <div className="container mx-auto px-4 py-6 text-center text-muted-foreground md:px-6">
-          <p>&copy; {new Date().getFullYear()} NextLevel Careers. All rights reserved.</p>
+          <p>&copy; {currentYear} NextLevel Careers. All rights reserved.</p>
         </div>
       </footer>
     </div>
