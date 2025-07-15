@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { UploadCloud, Loader2, FileText } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
+import { Card } from '@/components/ui/card';
 
 interface ResumeUploaderProps {
   onFileUpload: (file: File) => void;
@@ -55,7 +56,7 @@ export function ResumeUploader({ onFileUpload, isLoading, disabled = false }: Re
 
 
   return (
-    <Card className="w-full max-w-lg mx-auto p-2 shadow-lg" disabled={disabled}>
+    <Card className="w-full max-w-lg mx-auto p-2 shadow-lg data-[disabled=true]:opacity-50" data-disabled={disabled}>
       <div
         {...getRootProps()}
         className={cn(
@@ -99,8 +100,3 @@ export function ResumeUploader({ onFileUpload, isLoading, disabled = false }: Re
     </Card>
   );
 }
-
-// A placeholder card component to avoid breaking changes if it doesn't exist.
-const Card = ({ className, children, disabled }: { className?: string, children: React.ReactNode, disabled?: boolean }) => (
-    <div className={cn('bg-card text-card-foreground rounded-xl border', disabled && 'opacity-50', className)}>{children}</div>
-)
