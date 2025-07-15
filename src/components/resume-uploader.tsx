@@ -10,9 +10,10 @@ import { cn } from '@/lib/utils';
 interface ResumeUploaderProps {
   onFileUpload: (file: File) => void;
   isLoading: boolean;
+  disabled?: boolean;
 }
 
-export function ResumeUploader({ onFileUpload, isLoading }: ResumeUploaderProps) {
+export function ResumeUploader({ onFileUpload, isLoading, disabled = false }: ResumeUploaderProps) {
   const [file, setFile] = useState<File | null>(null);
   const { toast } = useToast();
 
@@ -38,6 +39,7 @@ export function ResumeUploader({ onFileUpload, isLoading }: ResumeUploaderProps)
       'application/vnd.openxmlformats-officedocument.wordprocessingml.document': ['.docx'],
     },
     maxFiles: 1,
+    disabled: disabled || isLoading,
   });
   
   const handleSubmit = () => {
@@ -53,12 +55,13 @@ export function ResumeUploader({ onFileUpload, isLoading }: ResumeUploaderProps)
 
 
   return (
-    <Card className="w-full max-w-lg mx-auto p-2 shadow-lg">
+    <Card className="w-full max-w-lg mx-auto p-2 shadow-lg" disabled={disabled}>
       <div
         {...getRootProps()}
         className={cn(
-          'flex flex-col items-center justify-center p-8 border-2 border-dashed rounded-lg cursor-pointer transition-colors',
-          isDragActive ? 'border-primary bg-primary/10' : 'border-border hover:border-primary/50'
+          'flex flex-col items-center justify-center p-8 border-2 border-dashed rounded-lg transition-colors',
+          isDragActive ? 'border-primary bg-primary/10' : 'border-border',
+          disabled ? 'cursor-not-allowed bg-muted/50' : 'cursor-pointer hover:border-primary/50'
         )}
       >
         <input {...getInputProps()} />
@@ -77,12 +80,12 @@ export function ResumeUploader({ onFileUpload, isLoading }: ResumeUploaderProps)
               <FileText className="h-5 w-5 text-primary"/>
               <span className="text-sm font-medium text-foreground truncate">{file.name}</span>
             </div>
-          <Button variant="ghost" size="sm" onClick={() => setFile(null)}>Remove</Button>
+          <Button variant="ghost" size="sm" onClick={() => setFile(null)} disabled={isLoading}>Remove</Button>
         </div>
       )}
 
       <div className="p-4">
-        <Button onClick={handleSubmit} disabled={isLoading || !file} className="w-full font-bold">
+        <Button onClick={handleSubmit} disabled={isLoading || !file || disabled} className="w-full font-bold">
           {isLoading ? (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -98,6 +101,6 @@ export function ResumeUploader({ onFileUpload, isLoading }: ResumeUploaderProps)
 }
 
 // A placeholder card component to avoid breaking changes if it doesn't exist.
-const Card = ({ className, children }: { className?: string, children: React.ReactNode }) => (
-    <div className={cn('bg-card text-card-foreground rounded-xl border', className)}>{children}</div>
+const Card = ({ className, children, disabled }: { className?: string, children: React.ReactNode, disabled?: boolean }) => (
+    <div className={cn('bg-card text-card-foreground rounded-xl border', disabled && 'opacity-50', className)}>{children}</div>
 )

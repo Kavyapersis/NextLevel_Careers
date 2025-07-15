@@ -1,15 +1,16 @@
 'use client';
 
-import type { AnalyzeResumeOutput } from '@/lib/types';
+import type { AppAnalysis } from '@/lib/types';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { CheckCircle, AlertTriangle, Lightbulb, Star } from 'lucide-react';
+import { CheckCircle, AlertTriangle, Lightbulb, Star, GraduationCap } from 'lucide-react';
 
 interface AnalysisDashboardProps {
-  analysis: AnalyzeResumeOutput;
+  appAnalysis: AppAnalysis;
 }
 
-export function AnalysisDashboard({ analysis }: AnalysisDashboardProps) {
+export function AnalysisDashboard({ appAnalysis }: AnalysisDashboardProps) {
+  const { analysis, learningPlan } = appAnalysis;
   return (
     <div className="space-y-8">
       <Card className="w-full text-center shadow-lg">
@@ -26,7 +27,7 @@ export function AnalysisDashboard({ analysis }: AnalysisDashboardProps) {
         </CardContent>
       </Card>
 
-      <div className="grid gap-6 md:grid-cols-1 lg:grid-cols-3">
+      <div className="grid gap-6 md:grid-cols-2">
         <Card className="shadow-lg">
           <CardHeader className="flex flex-row items-center gap-4 space-y-0">
             <Star className="h-6 w-6 text-yellow-500" />
@@ -57,11 +58,13 @@ export function AnalysisDashboard({ analysis }: AnalysisDashboardProps) {
             </ul>
           </CardContent>
         </Card>
+      </div>
 
+      <div className="grid gap-6 md:grid-cols-2">
         <Card className="shadow-lg">
           <CardHeader className="flex flex-row items-center gap-4 space-y-0">
             <Lightbulb className="h-6 w-6 text-accent" />
-            <CardTitle className="font-headline">Suggestions</CardTitle>
+            <CardTitle className="font-headline">Resume Suggestions</CardTitle>
           </CardHeader>
           <CardContent>
             <ul className="space-y-2 text-sm text-muted-foreground">
@@ -74,6 +77,25 @@ export function AnalysisDashboard({ analysis }: AnalysisDashboardProps) {
             </ul>
           </CardContent>
         </Card>
+
+        {learningPlan && learningPlan.conceptsToLearn.length > 0 && (
+          <Card className="shadow-lg">
+            <CardHeader className="flex flex-row items-center gap-4 space-y-0">
+              <GraduationCap className="h-6 w-6 text-green-500" />
+              <CardTitle className="font-headline">Concepts to Learn/Strengthen</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <ul className="space-y-2 text-sm text-muted-foreground">
+                {learningPlan.conceptsToLearn.map((item, index) => (
+                  <li key={index} className="flex items-start gap-2">
+                     <GraduationCap className="mt-1 h-4 w-4 shrink-0 text-green-500" />
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </CardContent>
+          </Card>
+        )}
       </div>
     </div>
   );

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import type { AnalyzeResumeOutput, MatchJobsToResumeOutput } from '@/lib/types';
+import type { AppAnalysis } from '@/lib/types';
 import { processResumeAndFindJobs } from '@/app/actions';
 import { useToast } from '@/hooks/use-toast';
 import { Compass, Briefcase, FileText } from 'lucide-react';
@@ -9,28 +9,37 @@ import { ResumeUploader } from './resume-uploader';
 import { AnalysisDashboard } from './analysis-dashboard';
 import { JobListings, JobListingsSkeleton } from './job-listings';
 import { Separator } from '@/components/ui/separator';
+import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
 
 type Status = 'idle' | 'analyzing' | 'error' | 'done';
 
 export function CareerCompassClient() {
   const [status, setStatus] = useState<Status>('idle');
-  const [analysis, setAnalysis] = useState<AnalyzeResumeOutput | null>(null);
-  const [jobs, setJobs] = useState<MatchJobsToResumeOutput | null>(null);
+  const [appAnalysis, setAppAnalysis] = useState<AppAnalysis | null>(null);
+  const [desiredJob, setDesiredJob] = useState('');
   const { toast } = useToast();
 
   const handleFileUpload = async (file: File) => {
+    if (!desiredJob) {
+      toast({
+        variant: 'destructive',
+        title: 'Job Role Required',
+        description: 'Please tell us what type of job you are looking for.',
+      });
+      return;
+    }
+    
     setStatus('analyzing');
-    setAnalysis(null);
-    setJobs(null);
+    setAppAnalysis(null);
 
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onload = async () => {
       try {
         const resumeDataUri = reader.result as string;
-        const result = await processResumeAndFindJobs(resumeDataUri);
-        setAnalysis(result.analysis);
-        setJobs(result.jobs);
+        const result = await processResumeAndFindJobs(resumeDataUri, desiredJob);
+        setAppAnalysis(result);
         setStatus('done');
       } catch (error) {
         setStatus('error');
@@ -56,8 +65,8 @@ export function CareerCompassClient() {
 
   const handleReset = () => {
     setStatus('idle');
-    setAnalysis(null);
-    setJobs(null);
+    setAppAnalysis(null);
+    setDesiredJob('');
   }
 
   return (
@@ -80,8 +89,26 @@ export function CareerCompassClient() {
               <p className="mt-4 text-lg text-muted-foreground">
                 Upload your resume to get an instant, in-depth analysis and discover job opportunities perfectly matched to your skills.
               </p>
-              <div className="mt-8">
-                <ResumeUploader onFileUpload={handleFileUpload} isLoading={status === 'analyzing'} />
+              <div className="mt-8 space-y-6 text-left">
+                <div className="grid w-full items-center gap-1.5">
+                    <Label htmlFor="job-role" className="font-headline text-lg">What type of job are you looking for?</Label>
+                    <p className="text-sm text-muted-foreground">
+                        E.g., "Junior Data Scientist", "Senior Marketing Manager"
+                    </p>
+                    <Input 
+                        id="job-role"
+                        type="text"
+                        placeholder="Enter your desired job title..."
+                        value={desiredJob}
+                        onChange={(e) => setDesiredJob(e.target.value)}
+                        className="max-w-lg mx-auto"
+                    />
+                </div>
+                <ResumeUploader 
+                    onFileUpload={handleFileUpload} 
+                    isLoading={status === 'analyzing'} 
+                    disabled={!desiredJob}
+                />
               </div>
             </div>
           )}
@@ -90,13 +117,13 @@ export function CareerCompassClient() {
             <div>
               <div className="mb-8 flex items-center justify-center gap-2 text-lg text-muted-foreground">
                 <FileText className="h-5 w-5 animate-pulse" />
-                <p className="font-headline">Analyzing your resume...</p>
+                <p className="font-headline">Analyzing your resume for a {desiredJob} role...</p>
               </div>
                <JobListingsSkeleton />
             </div>
           )}
 
-          {status === 'done' && analysis && (
+          {status === 'done' && appAnalysis && (
              <div className="space-y-12">
                <div>
                   <div className="mb-8 flex items-center justify-between">
@@ -106,7 +133,7 @@ export function CareerCompassClient() {
                      </div>
                      <button onClick={handleReset} className="text-sm text-primary hover:underline">Analyze another resume</button>
                   </div>
-                 <AnalysisDashboard analysis={analysis} />
+                 <AnalysisDashboard appAnalysis={appAnalysis} />
                </div>
 
                <Separator />
@@ -116,7 +143,7 @@ export function CareerCompassClient() {
                     <Briefcase className="h-7 w-7 text-primary" />
                     <h2 className="font-headline text-3xl font-bold tracking-tight">Job Matches</h2>
                  </div>
-                 {jobs ? <JobListings jobs={jobs} /> : <JobListingsSkeleton />}
+                 {appAnalysis.jobs ? <JobListings jobs={appAnalysis.jobs} /> : <JobListingsSkeleton />}
                </div>
              </div>
           )}
