@@ -4,13 +4,15 @@ import { useState, useEffect } from 'react';
 import type { AppAnalysis } from '@/lib/types';
 import { processResumeAndFindJobs } from '@/app/actions';
 import { useToast } from '@/hooks/use-toast';
-import { Compass, Briefcase, FileText } from 'lucide-react';
+import { Compass, Briefcase, FileText, LogOut } from 'lucide-react';
 import { ResumeUploader } from './resume-uploader';
 import { AnalysisDashboard } from './analysis-dashboard';
 import { JobListings, JobListingsSkeleton } from './job-listings';
 import { Separator } from '@/components/ui/separator';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
+import { Button } from './ui/button';
+import { logout } from '@/app/auth/actions';
 
 type Status = 'idle' | 'analyzing' | 'error' | 'done';
 
@@ -82,6 +84,12 @@ export function NextLevelCareersClient() {
             <Compass className="h-8 w-8 text-primary" />
             <h1 className="font-headline text-2xl font-bold text-foreground">NextLevel Careers</h1>
           </div>
+          <form action={logout}>
+            <Button variant="ghost" size="icon">
+              <LogOut className="h-5 w-5" />
+              <span className="sr-only">Logout</span>
+            </Button>
+          </form>
         </div>
       </header>
       <main className="flex-1">
