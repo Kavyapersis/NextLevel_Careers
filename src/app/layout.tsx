@@ -1,6 +1,7 @@
 import type {Metadata} from 'next';
 import './globals.css';
 import { Toaster } from "@/components/ui/toaster"
+import { app } from '@/lib/firebase'; // Import to initialize Firebase
 
 export const metadata: Metadata = {
   title: 'NextLevel Careers',
